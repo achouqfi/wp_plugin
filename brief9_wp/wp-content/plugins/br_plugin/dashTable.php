@@ -48,27 +48,32 @@
             </tr>
         </thead><?php
 
-            $connection = mysqli_connect('localhost','user','user');
-            mysqli_select_db($connection,"wp_brief9");
+            // $connection = mysqli_connect('localhost','user','user');
+            // mysqli_select_db($connection,"wp_brief9");
+        global $wpdb;
+        $table_name=$wpdb->prefix."contactUs";
+
 
             if(isset($_POST['Deleterow'])){
                 $id=$_POST['id'];
-                $queryD="DELETE FROM `contactus` WHERE id=$id";
-                mysqli_query($connection, $queryD);
+                $queryD="DELETE FROM `$table_name` WHERE id=$id";
+                $wpdb->query($queryD);
+                // mysqli_query($connection, $queryD);
             }
 
-            $query = "SELECT * FROM contactus";
-            $result = mysqli_query($connection, $query);
-            while ($row = $result->fetch_assoc()) {
+            $query = "SELECT * FROM $table_name";
+            $result = $wpdb->get_results($query);
+            
+            foreach($result as $row ){
                 echo '<tr>
-                        <td>' . $row["id"] .
-                    '</td><td>' . $row["names"] .
-                    '</td><td>' . $row["phone"] .
-                    '</td><td>' . $row["email"] .
-                    '</td><td>' . $row["messages"] .
+                        <td>' . $row->id .
+                        '</td><td>' . $row->names .
+                        '</td><td>' . $row->phone.
+                        '</td><td>' . $row->email.
+                        '</td><td>' . $row->messages .
                     '<td>
                     <form action="" method="post">
-                        <input type="text" value="'.$row["id"].'" name="id" hidden>
+                        <input type="text" value="'.$row->id.'" name="id" hidden>
                         <button type="submit" class="btn btn-danger" name="Deleterow">Delete</button>
                     </form> 
                     </td>
@@ -76,7 +81,7 @@
 
                         
                         <form action="" method="post">
-                            <button type="submit" class="btn btn-success"  data-toggle="modal" href="#myModal" name="submit">Reponse</button>
+                            <button type="submit" class="btn btn-success"  data-toggle="modal" onclick="popup" >Reponse</button>
                         </form> 
                             </td>
                     </tr>';
@@ -86,28 +91,13 @@
         </table>
         </div>
     </div>
+        <!-- <div>
+            <div class="">
+            </div>
+            <div>
+            </div>
+        </div> -->
 
-    <div class="row">
-        <div class="modal hide" id="myModal">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">x</button>
-            <h3>Login to MyWebsite.com</h3>
-        </div>
-        <div class="modal-body">
-            <form method="post" action='' name="login_form">
-            <p><input type="text" class="span3" name="eid" id="email" placeholder="Email"></p>
-            <p><input type="password" class="span3" name="passwd" placeholder="Password"></p>
-            <p><button type="submit" class="btn btn-primary">Sign in</button>
-                <a href="#">Forgot Password?</a>
-            </p>
-            </form>
-        </div>
-        <div class="modal-footer">
-            New To MyWebsite.com?
-            <a href="#" class="btn btn-primary">Register</a>
-        </div>
-        </div>
-    </div>
 
     <script>
 

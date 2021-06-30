@@ -1,45 +1,36 @@
 <?php
-
+//insertion a la DB
 if(isset($_POST['submit'])){
 
-    wp_tab();
-    insert_data();
-}
+  //include cnx with DB
+  global $wpdb;
+  //declaration de prefix
+  $table_name=$wpdb->prefix."contactUs";
 
+  $name = $_POST['nom'];
+  $phone = $_POST['telephone'];
+  $email = $_POST['email'];
+  $message = $_POST['message'];
 
-
-function wp_tab(){
-
-    $connection = mysqli_connect('localhost','user','user');
-    mysqli_select_db($connection,"wp_brief9");
-
-    $sql = "CREATE TABLE contactUs(id int NOT NULL PRIMARY KEY AUTO_INCREMENT, names varchar(255) NOT NULL,phone varchar(255) NOT NULL,email varchar(55) NOT NULL, messages varchar(255) NOT NULL)";
-    $result = mysqli_query($connection, $sql);
-    return $result;
-
-}
-
-function insert_data(){
-
-    $connection = mysqli_connect('localhost','user','user');
-    mysqli_select_db($connection,"wp_brief9");
-
-    $name = $_POST['nom'];
-    $phone = $_POST['telephone'];
-    $email = $_POST['email'];
-    $message = $_POST['message'];
-
-
-    if(empty($name) && empty($phone) && empty($email) && empty($message))
-    {
-     echo '<h1 style="color:red;">Remplir le formulaire</h1>';
-
-    }
-    else
-    {
-         $query="INSERT INTO contactUs(names,phone,email,messages)" . "VALUES ('$name','$phone','$email','$message')";
-         $result=mysqli_query($connection,$query);
-    }
+  //verification des inputs 
+  if(!empty($name) && !empty($phone) && !empty($email) && !empty($message))
+  {
+    //requette d'insertion a la table 
+    $wpdb->insert(
+      $table_name,
+      array(
+      "names"=>$name,
+      "phone"=>$phone,
+      "email"=>$email,
+      "messages"=>$message
+      ),
+      array(
+      "%s",
+      "%s",
+      "%s",
+      "%s"
+      ));
+  }
 }
 ?>
 
